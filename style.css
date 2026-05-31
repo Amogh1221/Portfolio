@@ -1074,38 +1074,111 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 }
 
 @media (max-width: 768px) {
+  /* ─── General mobile smoothness ─── */
+  body { -webkit-overflow-scrolling: touch; }
+
   .hero { padding: 100px 0 60px; }
   .hero-stats { gap: 16px; padding: 16px 20px; flex-wrap: wrap; justify-content: center; }
   .about-grid { grid-template-columns: 1fr; }
   .about-card-wrap { order: -1; }
   .skills-grid { grid-template-columns: 1fr; }
-  .projects-grid { grid-template-columns: 1fr; }
+  .projects-grid {
+    grid-template-columns: 1fr;
+    /* Prevent children from causing horizontal scroll */
+    overflow: hidden;
+  }
 
-  /* Touch devices: tap to expand horizontally */
-  .project-card.touch-hover { z-index: 100; }
-  /* Touch devices: bounded centric */
-  .project-card:nth-child(3n+1).touch-hover .project-main {
-    width: calc(200% + 28px);
-    transform: translateX(-8px) scale(1.04) translateY(-4px);
-    border-color: rgba(20,184,166,0.6);
-    box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 0 1px rgba(20,184,166,0.25);
-  }
-  .project-card:nth-child(3n+2).touch-hover .project-main {
-    width: calc(200% + 28px);
-    transform: translateX(-50%) scale(1.04) translateY(-4px);
-    border-color: rgba(20,184,166,0.6);
-    box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 0 1px rgba(20,184,166,0.25);
-  }
-  .project-card:nth-child(3n).touch-hover .project-main {
-    width: calc(200% + 28px);
-    transform: translateX(8px) scale(1.04) translateY(-4px);
-    border-color: rgba(20,184,166,0.6);
-    box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 0 1px rgba(20,184,166,0.25);
-  }
-  .project-card.touch-hover .project-left { width: 50%; }
-  .project-card.touch-hover .project-right { width: 50%; opacity: 1; }
-  .project-card.touch-hover .project-img-icon { transform: rotate(0deg) scale(1.08); }
+  /* ═══════════════════════════════════════════════
+     PROJECT CARDS — clean mobile layout
+     The desktop uses position:absolute + column
+     transforms that completely break on a single
+     column. We reset everything here.
+  ═══════════════════════════════════════════════ */
 
+  /* Cards grow with their content */
+  .project-card {
+    height: auto !important;
+    /* Prevent any child overflow causing horizontal scroll */
+    overflow: hidden;
+  }
+
+  /* Kill desktop hover dim so neighbouring cards
+     don't blur/disappear when finger touches one */
+  .projects-grid:has(.project-card:hover) .project-card:not(:hover) {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  /* Remove the elevated z-index from hovered card */
+  .project-card:hover { z-index: 1 !important; }
+
+  /* Reset ALL column-specific absolute positioning &
+     transforms for every card position (1, 2, 3) */
+  .project-main,
+  .project-card:nth-child(3n+1) .project-main,
+  .project-card:nth-child(3n+2) .project-main,
+  .project-card:nth-child(3n)   .project-main {
+    /* Switch from absolute to relative so the card
+       participates in normal document flow */
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    /* Always full width — no more 200%+ overflow */
+    width: 100% !important;
+    /* Stack image above details */
+    flex-direction: column !important;
+    /* No column-based shift transforms */
+    transform: none !important;
+    transform-origin: center center !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Suppress desktop hover expansion so touch-scroll
+     is never interrupted by a width animation */
+  .project-card:nth-child(3n+1):hover .project-main,
+  .project-card:nth-child(3n+2):hover .project-main,
+  .project-card:nth-child(3n):hover   .project-main {
+    width: 100% !important;
+    transform: none !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+    border-color: rgba(20,184,166,0.12) !important;
+  }
+
+  /* Left panel: full width, height driven by content */
+  .project-left,
+  .project-card:hover .project-left {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Image banner: slightly shorter on small screens */
+  .project-img { height: 170px; }
+
+  /* Details panel: always fully visible on mobile.
+     No tap needed — all info is readable at a glance. */
+  .project-right,
+  .project-card:hover .project-right {
+    width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+    border-left: none;
+    border-top: 1px solid rgba(20,184,166,0.2);
+    /* Override the desktop width-slide transition */
+    transition: none !important;
+  }
+
+  /* Inner wrapper: remove the fixed min-width designed
+     for the desktop horizontal slide */
+  .project-right-inner {
+    min-width: 0 !important;
+    padding: 24px 20px;
+  }
+
+  /* Metrics row: 2 columns fits better on narrow screens */
+  .project-metrics { grid-template-columns: repeat(2, 1fr); }
+
+  /* ─── Rest of mobile layout ─── */
   .certs-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .edu-card { flex-direction: column; gap: 20px; }
@@ -1118,6 +1191,9 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
 @media (max-width: 480px) {
   .hero-title { font-size: 2.5rem; }
   .hero-cta { flex-direction: column; }
-  .project-metrics { grid-template-columns: 1fr 1fr; }
   .about-info-grid { grid-template-columns: 1fr; }
+  /* Single column metrics on very small screens */
+  .project-metrics { grid-template-columns: 1fr 1fr; }
+  .project-body { padding: 18px 16px 16px; }
+  .project-right-inner { padding: 18px 16px; }
 }

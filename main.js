@@ -196,28 +196,7 @@ filterBtns.forEach(btn => {
   });
 });
 
-// ── Touch / tap support for project card overlay on mobile ──
-// On touch devices hover doesn't fire, so we toggle a CSS class on tap.
-if (window.matchMedia('(pointer: coarse)').matches) {
-  projectCards.forEach(card => {
-    card.addEventListener('click', e => {
-      // If the user tapped a link/button inside the overlay, let it do its thing
-      if (e.target.closest('a, button')) return;
 
-      const isOpen = card.classList.contains('touch-hover');
-      // Close all others first
-      projectCards.forEach(c => c.classList.remove('touch-hover'));
-      if (!isOpen) card.classList.add('touch-hover');
-    });
-  });
-
-  // Tap outside to close
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.project-card')) {
-      projectCards.forEach(c => c.classList.remove('touch-hover'));
-    }
-  });
-}
 
 // ── Contact form ──
 const form = document.getElementById('contact-form');
