@@ -1081,70 +1081,30 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   .skills-grid { grid-template-columns: 1fr; }
   .projects-grid { grid-template-columns: 1fr; }
 
-  /* ── Mobile project cards: VERTICAL expand on tap ── */
-  /* Reset the desktop fixed height — height is driven by content */
-  .project-card {
-    height: auto;
-    min-height: 420px;
-  }
-
-  /* project-main stacks vertically */
-  .project-main {
-    position: relative; /* out of absolute positioning so it participates in document flow */
-    top: auto;
-    left: auto;
-    right: auto;
-    width: 100% !important;
-    flex-direction: column;
-    transform: none !important;
-    transition: box-shadow 0.35s ease, border-color 0.35s ease;
-  }
-
-  /* Left column always full width on mobile */
-  .project-left {
-    width: 100% !important;
-    height: auto;
-  }
-
-  /* Right panel hidden by default — collapses to 0 height */
-  .project-right {
-    width: 100% !important;
-    height: 0;
-    border-left: none;
-    border-top: 1px solid rgba(20,184,166,0.18);
-    opacity: 0;
-    transition: height 0.4s cubic-bezier(0.34,1.56,0.64,1),
-                opacity 0.35s ease 0.05s;
-  }
-
-  /* Tap/touch: expand vertically */
-  .project-card.touch-hover {
-    z-index: 10;
-  }
-  .project-card.touch-hover .project-main {
+  /* Touch devices: tap to expand horizontally */
+  .project-card.touch-hover { z-index: 100; }
+  /* Touch devices: bounded centric */
+  .project-card:nth-child(3n+1).touch-hover .project-main {
+    width: calc(200% + 28px);
+    transform: translateX(-8px) scale(1.04) translateY(-4px);
     border-color: rgba(20,184,166,0.6);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(20,184,166,0.25);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 0 1px rgba(20,184,166,0.25);
   }
-  .project-card.touch-hover .project-right {
-    height: auto;
-    opacity: 1;
+  .project-card:nth-child(3n+2).touch-hover .project-main {
+    width: calc(200% + 28px);
+    transform: translateX(-50%) scale(1.04) translateY(-4px);
+    border-color: rgba(20,184,166,0.6);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 0 1px rgba(20,184,166,0.25);
   }
-  .project-card.touch-hover .project-img-icon {
-    transform: rotate(0deg) scale(1.08);
+  .project-card:nth-child(3n).touch-hover .project-main {
+    width: calc(200% + 28px);
+    transform: translateX(8px) scale(1.04) translateY(-4px);
+    border-color: rgba(20,184,166,0.6);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 0 1px rgba(20,184,166,0.25);
   }
-
-  /* Override fixed min-width set for horizontal desktop expand */
-  .project-right-inner {
-    min-width: 0;
-    width: 100%;
-  }
-
-  /* Disable the desktop column-based hover dim effect on mobile */
-  .projects-grid:has(.project-card:hover) .project-card:not(:hover) {
-    opacity: 1;
-    filter: none;
-    transform: none;
-  }
+  .project-card.touch-hover .project-left { width: 50%; }
+  .project-card.touch-hover .project-right { width: 50%; opacity: 1; }
+  .project-card.touch-hover .project-img-icon { transform: rotate(0deg) scale(1.08); }
 
   .certs-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
