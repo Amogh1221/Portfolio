@@ -244,6 +244,8 @@ button { cursor: pointer; border: none; background: none; font-family: var(--fon
   .navbar.menu-open {
     background: var(--bg) !important;
     backdrop-filter: none;
+    /* Snap to dark instantly — no fade delay from the global transition */
+    transition: none !important;
   }
   .nav-links.open {
     display: flex;
