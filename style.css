@@ -1239,6 +1239,10 @@ button {
   margin-top: 4px;
 }
 
+.project-mobile-links {
+  display: none !important;
+}
+
 .project-links .btn {
   flex: 1;
   justify-content: center;
@@ -1800,7 +1804,7 @@ button {
     padding: 0 !important;
     overflow: visible !important;
     justify-content: flex-start !important;
-    gap: 24px !important;
+    gap: 20px !important;
   }
 
   .projects-track-viewport {
@@ -1832,7 +1836,7 @@ button {
   .projects-track {
     display: flex !important;
     flex-direction: row !important;
-    gap: 18px !important;
+    gap: 16px !important;
     transform: none !important;
     width: max-content !important;
     padding: 0 4px !important;
@@ -1847,9 +1851,9 @@ button {
   }
 
   .project-card {
-    width: 85vw !important;
-    max-width: 340px !important;
-    height: auto !important;
+    width: 82vw !important;
+    max-width: 320px !important;
+    height: 430px !important;
     position: relative !important;
     overflow: hidden !important;
     border-radius: var(--radius-lg);
@@ -1883,25 +1887,40 @@ button {
   .project-left,
   .project-card:hover .project-left {
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   .project-img {
-    height: 160px !important;
+    height: 150px !important;
+    flex-shrink: 0 !important;
   }
 
   .project-body {
     padding: 18px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    justify-content: space-between !important;
+  }
+
+  .project-desc {
+    font-size: 0.85rem !important;
+    line-height: 1.55 !important;
+    color: var(--text-2) !important;
+  }
+
+  .project-mobile-links {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: auto !important;
+    padding-top: 10px !important;
   }
 
   .project-right,
   .project-card:hover .project-right {
-    width: 100% !important;
-    height: auto !important;
-    opacity: 1 !important;
-    border-left: none !important;
-    border-top: 1px solid rgba(20, 184, 166, 0.2) !important;
-    transition: none !important;
+    display: none !important;
   }
 
   .project-right-inner {
