@@ -220,11 +220,26 @@ type();
     });
   });
 
+  const trackViewport = document.querySelector('.projects-track-viewport');
+  if (trackViewport) {
+    trackViewport.addEventListener('scroll', () => {
+      if (window.innerWidth <= 768 && progressBar) {
+        const maxScroll = trackViewport.scrollWidth - trackViewport.clientWidth;
+        const progress = maxScroll > 0 ? trackViewport.scrollLeft / maxScroll : 0;
+        progressBar.style.width = `${Math.min(100, Math.max(0, progress * 100))}%`;
+      }
+    }, { passive: true });
+  }
+
   function updateHorizontalScroll() {
     if (window.innerWidth <= 768) {
       projectsTrack.style.transform = '';
-      if (progressBar) progressBar.style.width = '100%';
       cards.forEach(card => card.classList.remove('out-of-bounds'));
+      if (trackViewport && progressBar) {
+        const maxScroll = trackViewport.scrollWidth - trackViewport.clientWidth;
+        const progress = maxScroll > 0 ? trackViewport.scrollLeft / maxScroll : 0;
+        progressBar.style.width = `${Math.min(100, Math.max(0, progress * 100))}%`;
+      }
       return;
     }
 

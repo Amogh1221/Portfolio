@@ -1785,7 +1785,7 @@ button {
   }
 
   /* ═══════════════════════════════════════════════
-     PROJECTS SECTION — CLEAN MOBILE STACK LAYOUT
+     PROJECTS SECTION — MOBILE HORIZONTAL TOUCH SWIPE CAROUSEL
   ═══════════════════════════════════════════════ */
   .projects-scroll-section {
     height: auto !important;
@@ -1800,26 +1800,43 @@ button {
     padding: 0 !important;
     overflow: visible !important;
     justify-content: flex-start !important;
-    gap: 32px !important;
+    gap: 24px !important;
   }
 
   .projects-track-viewport {
     width: 100% !important;
     height: auto !important;
-    overflow: visible !important;
-    padding: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 16px 20px 24px !important;
     display: block !important;
+  }
+
+  /* Custom subtle scrollbar indicator for mobile touch track */
+  .projects-track-viewport::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .projects-track-viewport::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+  }
+
+  .projects-track-viewport::-webkit-scrollbar-thumb {
+    background: var(--g1);
+    border-radius: 2px;
   }
 
   .projects-track {
     display: flex !important;
-    flex-direction: column !important;
-    gap: 28px !important;
+    flex-direction: row !important;
+    gap: 18px !important;
     transform: none !important;
-    width: 100% !important;
-    max-width: 520px !important;
-    margin: 0 auto !important;
-    padding: 0 16px !important;
+    width: max-content !important;
+    padding: 0 4px !important;
+    align-items: stretch !important;
   }
 
   /* Kill desktop focus dimming on mobile touch */
@@ -1830,11 +1847,14 @@ button {
   }
 
   .project-card {
-    width: 100% !important;
+    width: 85vw !important;
+    max-width: 340px !important;
     height: auto !important;
     position: relative !important;
     overflow: hidden !important;
     border-radius: var(--radius-lg);
+    scroll-snap-align: center;
+    flex-shrink: 0 !important;
   }
 
   .project-card:hover {
@@ -1846,7 +1866,7 @@ button {
     top: auto !important;
     left: auto !important;
     width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     flex-direction: column !important;
     transform: none !important;
     transform-origin: center center !important;
@@ -1867,11 +1887,11 @@ button {
   }
 
   .project-img {
-    height: 180px !important;
+    height: 160px !important;
   }
 
   .project-body {
-    padding: 20px 18px !important;
+    padding: 18px 16px !important;
   }
 
   .project-right,
@@ -1886,15 +1906,15 @@ button {
 
   .project-right-inner {
     min-width: 0 !important;
-    padding: 20px 18px !important;
-    gap: 14px !important;
+    padding: 18px 16px !important;
+    gap: 12px !important;
     overflow: visible !important;
     height: auto !important;
   }
 
   .project-desc-detailed {
-    font-size: 0.85rem !important;
-    line-height: 1.65 !important;
+    font-size: 0.82rem !important;
+    line-height: 1.6 !important;
     display: block !important;
     -webkit-line-clamp: none !important;
     overflow: visible !important;
