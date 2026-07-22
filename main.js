@@ -179,22 +179,98 @@ type();
   draw();
 })();
 
-// ── Project filter ──
-const filterBtns = document.querySelectorAll('.filter-btn');
-const projectCards = document.querySelectorAll('.project-card');
+// ── Horizontal Scroll-on-Scroll Projects Section ──
+(function () {
+  const projectsSection = document.getElementById('projects');
+  const projectsTrack = document.getElementById('projects-track');
+  const progressBar = document.getElementById('projects-progress-bar');
 
-filterBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    filterBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter = btn.dataset.filter;
-    projectCards.forEach(card => {
-      const cats = (card.dataset.category || '').split(' ');
-      const show = filter === 'all' || cats.includes(filter);
-      card.classList.toggle('hidden', !show);
+  if (!projectsSection || !projectsTrack) return;
+
+  const cards = projectsTrack.querySelectorAll('.project-card');
+
+  function adjustCardHoverShift(card) {
+    const main = card.querySelector('.project-main');
+    if (!main) return;
+
+    const rect = card.getBoundingClientRect();
+    const expandedWidth = 720;
+    const padding = 24;
+    const viewportWidth = window.innerWidth;
+
+    let shiftX = 0;
+
+    // Check if expanding to the right would overflow the right window boundary
+    if (rect.left + expandedWidth > viewportWidth - padding) {
+      shiftX = (viewportWidth - padding) - (rect.left + expandedWidth);
+    }
+    // Check if shift causes left overflow
+    if (rect.left + shiftX < padding) {
+      shiftX = padding - rect.left;
+    }
+
+    main.style.setProperty('--hover-shift-x', `${shiftX}px`);
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => adjustCardHoverShift(card));
+    card.addEventListener('mouseleave', () => {
+      const main = card.querySelector('.project-main');
+      if (main) main.style.removeProperty('--hover-shift-x');
     });
   });
-});
+
+  function updateHorizontalScroll() {
+    if (window.innerWidth <= 768) {
+      projectsTrack.style.transform = '';
+      if (progressBar) progressBar.style.width = '100%';
+      cards.forEach(card => card.classList.remove('out-of-bounds'));
+      return;
+    }
+
+    const sectionTop = projectsSection.offsetTop;
+    const sectionHeight = projectsSection.offsetHeight;
+    const viewportHeight = window.innerHeight;
+
+    const scrollableDistance = sectionHeight - viewportHeight;
+    const currentScroll = window.scrollY - sectionTop;
+    const progress = Math.max(0, Math.min(1, currentScroll / scrollableDistance));
+
+    const trackWidth = projectsTrack.scrollWidth;
+    const viewportWidth = window.innerWidth;
+    const maxTranslateX = Math.max(0, trackWidth - viewportWidth + (viewportWidth * 0.05));
+
+    const translateX = progress * maxTranslateX;
+    projectsTrack.style.transform = `translateX(-${translateX}px)`;
+
+    if (progressBar) {
+      progressBar.style.width = `${progress * 100}%`;
+    }
+
+    // Auto-collapse cards that scroll out of the visible browser window
+    const edgeMargin = 10;
+    cards.forEach(card => {
+      const rect = card.getBoundingClientRect();
+      if (rect.right < edgeMargin || rect.left > viewportWidth - edgeMargin) {
+        card.classList.add('out-of-bounds');
+        const main = card.querySelector('.project-main');
+        if (main) main.style.removeProperty('--hover-shift-x');
+      } else {
+        card.classList.remove('out-of-bounds');
+      }
+    });
+
+    // Keep active hovered card position updated if inside the viewport
+    const hoveredCard = projectsTrack.querySelector('.project-card:not(.out-of-bounds):hover');
+    if (hoveredCard) {
+      adjustCardHoverShift(hoveredCard);
+    }
+  }
+
+  window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
+  window.addEventListener('resize', updateHorizontalScroll);
+  updateHorizontalScroll();
+})();
 
 
 
