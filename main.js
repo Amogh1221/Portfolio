@@ -223,68 +223,29 @@ type();
   const trackViewport = document.querySelector('.projects-track-viewport');
   if (trackViewport) {
     trackViewport.addEventListener('scroll', () => {
-      if (window.innerWidth <= 768 && progressBar) {
+      if (progressBar) {
         const maxScroll = trackViewport.scrollWidth - trackViewport.clientWidth;
         const progress = maxScroll > 0 ? trackViewport.scrollLeft / maxScroll : 0;
         progressBar.style.width = `${Math.min(100, Math.max(0, progress * 100))}%`;
       }
     }, { passive: true });
-  }
 
-  function updateHorizontalScroll() {
-    if (window.innerWidth <= 768) {
-      projectsTrack.style.transform = '';
-      cards.forEach(card => card.classList.remove('out-of-bounds'));
-      if (trackViewport && progressBar) {
-        const maxScroll = trackViewport.scrollWidth - trackViewport.clientWidth;
-        const progress = maxScroll > 0 ? trackViewport.scrollLeft / maxScroll : 0;
-        progressBar.style.width = `${Math.min(100, Math.max(0, progress * 100))}%`;
+    // Enable horizontal scrolling with vertical mouse wheel
+    trackViewport.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0 && Math.abs(e.deltaX) < Math.abs(e.deltaY)) {
+        const isAtStart = trackViewport.scrollLeft === 0;
+        const isAtEnd = Math.abs(trackViewport.scrollWidth - trackViewport.clientWidth - trackViewport.scrollLeft) <= 1;
+
+        if ((e.deltaY < 0 && isAtStart) || (e.deltaY > 0 && isAtEnd)) {
+          // Reached the edge, let the main page scroll vertically
+          return;
+        }
+
+        e.preventDefault();
+        trackViewport.scrollLeft += e.deltaY;
       }
-      return;
-    }
-
-    const sectionTop = projectsSection.offsetTop;
-    const sectionHeight = projectsSection.offsetHeight;
-    const viewportHeight = window.innerHeight;
-
-    const scrollableDistance = sectionHeight - viewportHeight;
-    const currentScroll = window.scrollY - sectionTop;
-    const progress = Math.max(0, Math.min(1, currentScroll / scrollableDistance));
-
-    const trackWidth = projectsTrack.scrollWidth;
-    const viewportWidth = window.innerWidth;
-    const maxTranslateX = Math.max(0, trackWidth - viewportWidth + (viewportWidth * 0.05));
-
-    const translateX = progress * maxTranslateX;
-    projectsTrack.style.transform = `translateX(-${translateX}px)`;
-
-    if (progressBar) {
-      progressBar.style.width = `${progress * 100}%`;
-    }
-
-    // Auto-collapse cards that scroll out of the visible browser window
-    const edgeMargin = 10;
-    cards.forEach(card => {
-      const rect = card.getBoundingClientRect();
-      if (rect.right < edgeMargin || rect.left > viewportWidth - edgeMargin) {
-        card.classList.add('out-of-bounds');
-        const main = card.querySelector('.project-main');
-        if (main) main.style.removeProperty('--hover-shift-x');
-      } else {
-        card.classList.remove('out-of-bounds');
-      }
-    });
-
-    // Keep active hovered card position updated if inside the viewport
-    const hoveredCard = projectsTrack.querySelector('.project-card:not(.out-of-bounds):hover');
-    if (hoveredCard) {
-      adjustCardHoverShift(hoveredCard);
-    }
+    }, { passive: false });
   }
-
-  window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
-  window.addEventListener('resize', updateHorizontalScroll);
-  updateHorizontalScroll();
 })();
 
 

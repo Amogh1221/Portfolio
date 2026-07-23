@@ -934,21 +934,14 @@ button {
 /* ─── PROJECTS — HORIZONTAL SCROLL TRACK WITH DYNAMIC EXPANDING CARDS ─── */
 .projects-scroll-section {
   position: relative;
-  height: 480vh;
-  /* Vertical scroll room for horizontal translation */
   background: var(--bg-alt);
+  padding: 110px 0;
 }
 
 .projects-sticky-container {
-  position: sticky;
-  top: 0;
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 0 20px;
-  overflow: hidden;
+  gap: 32px;
 }
 
 .projects-header-container {
@@ -976,10 +969,24 @@ button {
   width: 100%;
   display: flex;
   align-items: center;
-  overflow: visible;
-  /* Allows expanding cards to pop out without clipping */
+  overflow-x: auto;
+  overflow-y: hidden;
   position: relative;
-  padding: 20px 0;
+  padding: 40px 0; /* Padding for expanded cards */
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for horizontal projects track */
+.projects-track-viewport::-webkit-scrollbar {
+  height: 8px;
+}
+.projects-track-viewport::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+.projects-track-viewport::-webkit-scrollbar-thumb {
+  background: var(--g1);
+  border-radius: 4px;
 }
 
 .projects-track {
@@ -988,8 +995,6 @@ button {
   padding: 0 5vw;
   width: max-content;
   align-items: center;
-  will-change: transform;
-  transition: transform 0.08s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
 /* Dim unhovered cards to emphasize focus and depth */
@@ -1035,29 +1040,12 @@ button {
     box-shadow 0.45s ease, border-color 0.45s ease;
 }
 
-.project-card:hover:not(.out-of-bounds) .project-main {
+.project-card:hover .project-main {
   width: 720px;
   /* Doubles width on hover to reveal details panel, dynamically shifting if near window bounds */
   transform: translateX(var(--hover-shift-x, 0px)) scale(1.03) translateY(-10px);
   border-color: rgba(20, 184, 166, 0.6);
   box-shadow: 0 40px 90px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(20, 184, 166, 0.25), 0 0 40px rgba(20, 184, 166, 0.2);
-}
-
-/* Force collapse cards when scrolled out of window boundary */
-.project-card.out-of-bounds .project-main {
-  width: 360px !important;
-  transform: none !important;
-  border-color: rgba(20, 184, 166, 0.12) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-}
-
-.project-card.out-of-bounds .project-left {
-  width: 100% !important;
-}
-
-.project-card.out-of-bounds .project-right {
-  width: 0 !important;
-  opacity: 0 !important;
 }
 
 /* Left panel (Always visible compact face) */
@@ -1070,7 +1058,7 @@ button {
   transition: width 0.45s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.project-card:hover:not(.out-of-bounds) .project-left {
+.project-card:hover .project-left {
   width: 50%;
 }
 
@@ -1155,7 +1143,7 @@ button {
     opacity 0.4s ease 0.05s;
 }
 
-.project-card:hover:not(.out-of-bounds) .project-right {
+.project-card:hover .project-right {
   width: 50%;
   opacity: 1;
 }
